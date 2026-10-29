@@ -223,12 +223,22 @@ def main():
                 "summary": f"Complete guide and actionable advice on {topic} for Indian farmers."
             }]
         else:
-            print(f"\n[AUTO MODE - {ch_name}] No pending ideas found in CSV (or CSV missing).")
-            print(f"[AUTO MODE - {ch_name}] Searching trending farming & agriculture topics in India via RSS & Wikipedia...")
-            topics = discover_topics(settings)
-            if not topics:
-                raise SystemExit("No research results were found. Check network/RSS or add sources manually.")
-            topic = topics[0]["title"]
+            if ideas_csv.exists() and not args.disable_csv_ideas:
+                print("\n" + "=" * 70)
+                print(f" [PIPELINE PAUSED] All topics in {ideas_csv.name} have been completed!")
+                print(f" Sabhi topics khatam ho chuke hain. Pipeline is safely paused.")
+                print(f" Naye topics add karein (status: 'unused') in {ideas_csv.name} to resume.")
+                print("=" * 70 + "\n")
+                pause_file = ROOT / args.output / "PIPELINE_PAUSED.txt"
+                pause_file.parent.mkdir(parents=True, exist_ok=True)
+                pause_file.write_text("ALL_TOPICS_FINISHED", encoding="utf-8")
+                sys.exit(0)
+            else:
+                print(f"\n[AUTO MODE - {ch_name}] No CSV ideas file found. Searching trending topics via RSS & Wikipedia...")
+                topics = discover_topics(settings)
+                if not topics:
+                    raise SystemExit("No research results were found. Check network/RSS or add sources manually.")
+                topic = topics[0]["title"]
 
     stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
     out = ROOT / args.output / f"research-{stamp}"

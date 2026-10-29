@@ -237,6 +237,10 @@ jobs:
               --custom-description "$CUSTOM_DESC" \
               --custom-tags "$CUSTOM_TAGS"
           fi
+          if [ -f output/PIPELINE_PAUSED.txt ]; then
+            echo "pipeline_paused=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::All topics in CSV completed. Automation paused safely until new topics are added."
+          fi
 
       - name: Commit updated ideas CSV (mark used)
         if: always()
@@ -259,6 +263,7 @@ jobs:
           fi
 
       - name: Prepare NotebookLM files
+        if: steps.gen_pack.outputs.pipeline_paused != 'true'
         run: |
           if [ ! -f output/notebooklm_research_brief.md ] || [ ! -f output/metadata.json ]; then
             d=$(ls -td output/research-* 2>/dev/null | head -1)
@@ -274,6 +279,7 @@ jobs:
           fi
 
       - name: Generate and download video from NotebookLM (Cloud)
+        if: steps.gen_pack.outputs.pipeline_paused != 'true'
         env:
           PYTHONUNBUFFERED: "1"
         run: |
@@ -285,6 +291,7 @@ jobs:
               --timeout-minutes 75
 
       - name: Process Video (Trim last 3s, Watermark Removal, Intro & Custom Metadata)
+        if: steps.gen_pack.outputs.pipeline_paused != 'true'
         env:
           MODE: ${{ inputs.mode || 'auto' }}
           INTRO_URL: ${{ inputs.custom_intro_url }}
@@ -311,6 +318,7 @@ jobs:
             --custom-tags "$CUSTOM_TAGS"
 
       - name: Generate Pro High-CTR YouTube Thumbnail
+        if: steps.gen_pack.outputs.pipeline_paused != 'true'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
@@ -325,6 +333,7 @@ jobs:
           fi
 
       - name: Upload to YouTube
+        if: steps.gen_pack.outputs.pipeline_paused != 'true'
         env:
           YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
