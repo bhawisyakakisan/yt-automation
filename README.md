@@ -365,3 +365,4 @@ yt-automate/
 - The `.gitignore` is pre-configured to prevent sensitive credentials and tokens from being committed.
 - Default upload privacy is set to `private` to allow manual verification before videos go public.
 "# yt-automation" 
+"# yt-automation" 
