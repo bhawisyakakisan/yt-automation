@@ -1,0 +1,73 @@
+# MASTER PROMPT: KISAN BADLEGA AGRICULTURE THUMBNAIL
+
+Create a professional, high-impact YouTube thumbnail for a Hindi agriculture education channel called "KISAN BADLEGA", using the uploaded reference thumbnails as the primary visual style guide.
+
+## 1. INPUT DETAILS
+
+- Video topic: [YOUR TOPIC]
+- Main Hindi headline: [MAIN HEADLINE]
+- Supporting text: [OPTIONAL SUBHEADING]
+- Main crop or subject: [CROP / SEED / FARMER / VEGETABLE]
+- Key message: [WHAT VIEWERS SHOULD UNDERSTAND]
+- Important numbers or facts: [YIELD / QUANTITY / YEAR / PRICE]
+- Thumbnail style: [AUTO / CROP TEXT / FARMER COMPARISON / BEFORE AFTER / MYSTERY CROPS]
+
+## 2. REFERENCE STYLE
+
+Closely analyze the uploaded reference images and reproduce their visual design language, not their original content.
+
+Use:
+- Large, bold Hindi Devanagari typography with thick strokes and strong readability.
+- A realistic agricultural background featuring detailed crops, leaves, fields, seeds, vegetables or farming activities.
+- High contrast between the headline, background and main subject.
+- A color palette based on bright yellow, white, deep red, natural green, black and warm golden agricultural tones.
+- Strong visual hierarchy, with one main message that viewers can understand instantly.
+- Realistic lighting, sharp crop details, rich textures and professional photographic compositing.
+- Large, clear focal objects rather than multiple small decorative elements.
+- Composition and text placement inspired by the most relevant reference thumbnail.
+
+## 3. SELECT THE MOST SUITABLE LAYOUT
+
+Choose the layout that best fits the topic.
+
+A. CROP + BOLD TEXT:
+Use a large, realistic crop photograph as the background. Place a dark gradient or darkened area behind the headline when necessary. Use bold white text and highlight the most important number or result in bright yellow.
+
+B. FARMER + EDUCATIONAL COMPARISON:
+Use a realistic Indian farmer or relevant crop as the main subject. Add a warm golden agricultural background, a strong headline and only the essential comparison elements, such as seed size, crop quality or yield.
+
+C. BEFORE AND AFTER:
+Create a clear split-screen comparison showing the inferior result on one side and the improved result on the other. Use a red cross and green check only when appropriate. Add a large, thick directional arrow if it helps explain the transformation.
+
+D. MYSTERY CROPS:
+Show three distinct crop or vegetable panels with white borders over a realistic agricultural background. Use a deep-red headline banner and a white secondary text banner, matching the reference design when appropriate.
+
+## 4. TYPOGRAPHY AND TEXT PLACEMENT
+
+Keep the headline large enough to read on a mobile screen.
+
+Use white for primary text, yellow for important numbers or keywords, black for text on yellow backgrounds, and deep red for headline banners when suitable.
+
+Preserve the exact supplied Hindi wording, spelling, numbers and units. Do not invent additional text, statistics or claims. Do not translate the Hindi text into English.
+
+If exact Hindi typography cannot be rendered accurately, leave clean, intentional space for adding the headline manually in an image editor. Never generate random or garbled text.
+
+## 5. IMAGE QUALITY AND COMPOSITION
+
+- Canvas: 16:9 widescreen, 1280 × 720 pixels.
+- Keep important subjects and text within safe margins.
+- Use realistic crop photography and natural agricultural details.
+- Ensure the main subject is immediately recognizable.
+- Maintain a clean foreground-background separation.
+- Use arrows, comparison cards, borders and symbols only when they communicate the topic.
+- Avoid clutter, unnecessary logos, excessive glow, cartoonish crops and artificial-looking textures.
+- Do not add a watermark or an invented channel logo.
+- Avoid repeating the same crop, subject or decorative element unnecessarily.
+
+## 6. FINAL OBJECTIVE
+
+Produce one finished YouTube thumbnail that looks like it belongs to the same visual family as the supplied KISAN BADLEGA reference thumbnails, while being original and specifically designed for the new video topic.
+
+Prioritize strong Hindi readability, realistic agricultural imagery, immediate topic recognition and a clear visual hook.
+
+Output only the thumbnail artwork in 16:9 format, without mockups, device frames or extra presentation elements.

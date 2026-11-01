@@ -172,14 +172,37 @@ def populate_prompt_template(
     badge_label = meta.get("thumbnail_top_badge") or default_top
     support_text = meta.get("thumbnail_benefit") or default_benefit
 
+    # Detect crop / subject from topic
+    crop_subject = "गेहूँ, आलू, सरसों, मटर या भारतीय कृषि फसल"
+    topic_lower = topic_str.lower()
+    if "गेहूँ" in topic_lower or "wheat" in topic_lower:
+        crop_subject = "गेहूँ की लहलहाती फसल, उन्नत बालियां और दाने (Wheat Crop & Grains)"
+    elif "आलू" in topic_lower or "potato" in topic_lower:
+        crop_subject = "आलू की बंपर पैदावार, बड़े साफ कंद और स्वस्थ पौधे (Healthy Potatoes & Harvest)"
+    elif "सरसों" in topic_lower or "mustard" in topic_lower:
+        crop_subject = "सरसों की पीली चमकदार फसल और भरपूर दानेदार फलियां (Mustard Crop & Pods)"
+    elif "मटर" in topic_lower or "pea" in topic_lower:
+        crop_subject = "हरी ताज़ा मटर की फलियां और स्वस्थ पौधे (Green Pea Pods & Harvest)"
+    elif "सिंचाई" in topic_lower or "drip" in topic_lower:
+        crop_subject = "आधुनिक ड्रिप सिंचाई प्रणाली और जल प्रबंधन (Modern Drip Irrigation Setup)"
+    elif "खाद" in topic_lower or "compost" in topic_lower:
+        crop_subject = "जैविक खाद, वर्मीकंपोस्ट और उपजाऊ मिट्टी (Organic Compost & Rich Soil)"
+
     replacements = {
+        # Master Prompt Input Fields
+        "[YOUR TOPIC]": topic_str,
         "[TOPIC]": topic_str,
         "{topic}": topic_str,
         "[MAIN HEADLINE]": headline,
         "{main_headline}": headline,
         "{headline}": headline,
+        "[OPTIONAL SUBHEADING]": subheadline,
         "[SUBHEADLINE]": subheadline,
         "{subheadline}": subheadline,
+        "[CROP / SEED / FARMER / VEGETABLE]": crop_subject,
+        "[WHAT VIEWERS SHOULD UNDERSTAND]": f"{topic_str} की पूरी जानकारी, सही समय, बीज, खाद और बंपर पैदावार का फॉर्मूला",
+        "[YIELD / QUANTITY / YEAR / PRICE]": f"{hook_num} | 2026",
+        "[AUTO / CROP TEXT / FARMER COMPARISON / BEFORE AFTER / MYSTERY CROPS]": "AUTO (Pick most impactful high-CTR composition)",
         "[KEY WORD]": key_word,
         "[KEY PHRASE]": key_word,
         "{highlight}": subheadline,
@@ -187,16 +210,16 @@ def populate_prompt_template(
         "[TOPIC LABEL]": badge_label,
         "[SUPPORTING TEXT]": support_text,
         "{benefit}": support_text,
-        "[MAIN VISUAL]": f"Indian farmer with modern agricultural setup and healthy lush crops for {topic_str}",
-        "[MAIN SUBJECT]": f"proud Indian farmer in traditional attire showcasing high-yield results for {topic_str}",
-        "[SETTING]": "fertile agricultural fields in India with modern irrigation under bright cinematic daylight",
-        "[SECONDARY VISUAL]": "close-up of farmer holding official documents and fresh high-grade harvest",
-        "[VISUAL 1]": f"close-up of lush healthy soil and crops for {topic_str}",
-        "[VISUAL 2]": f"modern irrigation and smart agricultural setup for {topic_str}",
-        "[VISUAL 3]": f"happy farmer reviewing top-grade high-yield harvest for {topic_str}",
-        "[IMPORTANT DETAIL]": "modern automated irrigation nozzle delivering water to lush green crops",
-        "[BEFORE VISUAL]": "traditional dry agricultural field with low yield and worried farmer",
-        "[AFTER VISUAL]": f"modern prosperous high-yield farm with gushing irrigation and smiling farmer for {topic_str}",
+        "[MAIN VISUAL]": f"Indian farmer with modern agricultural setup and healthy lush {crop_subject}",
+        "[MAIN SUBJECT]": f"proud Indian farmer in traditional attire showcasing high-yield results of {crop_subject}",
+        "[SETTING]": "fertile agricultural fields in India with modern farming under bright cinematic daylight",
+        "[SECONDARY VISUAL]": f"close-up of top-grade {crop_subject} and official trusted guidance",
+        "[VISUAL 1]": f"close-up of lush healthy soil and seeds for {topic_str}",
+        "[VISUAL 2]": f"modern cultivation and nutrition setup for {topic_str}",
+        "[VISUAL 3]": f"happy farmer reviewing top-grade high-yield harvest of {crop_subject}",
+        "[IMPORTANT DETAIL]": f"modern high-yield {crop_subject} with robust growth",
+        "[BEFORE VISUAL]": f"traditional low-yield struggling {crop_subject} with yellowing leaves and worried farmer",
+        "[AFTER VISUAL]": f"modern prosperous bumper harvest of {crop_subject} with smiling proud Indian farmer",
         "[VS OR COMPARISON BADGE]": "VS",
         "{channel_name}": channel_name,
         "{style_notes}": meta.get("thumbnail_image_prompt") or "",
@@ -208,11 +231,23 @@ def populate_prompt_template(
     return res
 
 def resolve_prompt_template(template_name: str = None, fmt_type: str = None) -> tuple[str, str] | tuple[None, None]:
-    """Resolve AI Prompt template. If template_name is not provided, picks a RANDOM template from context/thumbnail_templates/."""
+    """Resolve AI Prompt template.
+    If template_name is not provided or 'auto', uses master_prompt.txt (if present)
+    or randomly picks from template1.txt to template5.txt.
+    """
     templates_dirs = [
         ROOT / "context" / "thumbnail_templates",
         ROOT / "Context" / "thumbnail_templates"
     ]
+
+    # Check for master_prompt.txt
+    master_file = None
+    for tdir in templates_dirs:
+        if tdir.is_dir():
+            mf = tdir / "master_prompt.txt"
+            if mf.is_file():
+                master_file = mf
+                break
 
     all_txt_templates = []
     for tdir in templates_dirs:
@@ -221,9 +256,13 @@ def resolve_prompt_template(template_name: str = None, fmt_type: str = None) -> 
                 if p.is_file():
                     all_txt_templates.append(p)
 
-    # 1. If explicit template requested (e.g. template1, template2, template5)
-    if template_name and template_name.lower() != "random":
+    # 1. If explicit template requested (e.g. master, template1, template2, template5)
+    if template_name and template_name.lower() not in ["random", "auto"]:
         req = str(template_name).strip().lower()
+        if "master" in req and master_file:
+            print(f"[THUMBNAIL] Using Master Prompt template: {master_file.name}")
+            return master_file.read_text(encoding="utf-8").strip(), master_file.stem
+
         for p in all_txt_templates:
             if req == p.stem.lower() or req in p.stem.lower():
                 try:
@@ -232,7 +271,13 @@ def resolve_prompt_template(template_name: str = None, fmt_type: str = None) -> 
                 except Exception:
                     pass
 
-    # 2. Pick a RANDOM template from available templates (template1.txt to template5.txt)
+    # 2. If master_prompt.txt exists and template_name is 'master' or default:
+    # Use Master Prompt as the primary generator
+    if master_file and (template_name == "master" or not template_name):
+        print(f"[THUMBNAIL] Using KISAN BADLEGA Master Prompt template: {master_file.name}")
+        return master_file.read_text(encoding="utf-8").strip(), master_file.stem
+
+    # 3. Fallback: Pick a RANDOM template from available templates (template1.txt to template5.txt)
     if all_txt_templates:
         chosen = random.choice(all_txt_templates)
         print(f"[THUMBNAIL] Randomly selected High-CTR template: {chosen.name}")
