@@ -2,8 +2,7 @@ name: Research & NotebookLM Pack
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "30 3 * * *" # 09:00 IST daily
+  # schedule: (Disabled so it doesn't run redundantly; Full NotebookLM Pipeline handles end-to-end runs)
 
 permissions:
   contents: read

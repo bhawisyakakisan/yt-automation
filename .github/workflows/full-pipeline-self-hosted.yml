@@ -2,8 +2,8 @@ name: Full NotebookLM Pipeline (Windows self-hosted)
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "30 3 * * *" # 09:00 IST
+  # schedule: (Disabled so it doesn't conflict with full-pipeline-cloud)
+  #   - cron: "30 3 * * *"
 
 permissions:
   contents: read

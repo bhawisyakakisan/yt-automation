@@ -205,11 +205,11 @@ def interactive_setup():
         git_commit_and_push()
 
 
-def git_commit_and_push():
+def git_commit_and_push(custom_msg: str = None):
     print("\nPushing changes to GitHub repository...")
     try:
         subprocess.run(["git", "add", "config/schedule.json", ".github/workflows/full-pipeline-cloud.yml"], check=True)
-        commit_msg = "chore: update auto-posting schedule & videos frequency"
+        commit_msg = custom_msg or "chore: update auto-posting schedule & videos frequency"
         subprocess.run(["git", "commit", "-m", commit_msg], check=True)
         subprocess.run(["git", "push"], check=True)
         print("\n[SUCCESS] Schedule updated & pushed to GitHub! Naya schedule ab live hai.")
@@ -224,10 +224,36 @@ def main():
     parser.add_argument("--interactive", action="store_true", help="Launch interactive step-by-step setup")
     parser.add_argument("--apply", action="store_true", help="Apply config/schedule.json to workflow file")
     parser.add_argument("--push", action="store_true", help="Commit and push changes to GitHub")
+    parser.add_argument("--stop", action="store_true", help="Instantly STOP/PAUSE automated daily posting")
+    parser.add_argument("--start", action="store_true", help="START/RESUME automated daily posting")
 
     args = parser.parse_args()
 
-    if args.status:
+    if args.stop:
+        cfg = load_schedule_config()
+        cfg["enabled"] = False
+        save_schedule_config(cfg)
+        apply_to_workflow(cfg)
+        print("\n" + "=" * 60)
+        print(" [PAUSED] Automated daily posting has been STOPPED/DISABLED.")
+        print(" Config saved in config/schedule.json and workflow updated.")
+        print("=" * 60 + "\n")
+        if args.push or input("GitHub par push karke live apply karein? (y/n) [default: y]: ").strip().lower() in ['', 'y', 'yes']:
+            git_commit_and_push(custom_msg="chore: stop/pause automated daily video posting")
+        return
+    elif args.start:
+        cfg = load_schedule_config()
+        cfg["enabled"] = True
+        save_schedule_config(cfg)
+        apply_to_workflow(cfg)
+        print("\n" + "=" * 60)
+        print(" [RESUMED] Automated daily posting is now ACTIVE/ENABLED.")
+        print(" Config saved in config/schedule.json and workflow updated.")
+        print("=" * 60 + "\n")
+        if args.push or input("GitHub par push karke live apply karein? (y/n) [default: y]: ").strip().lower() in ['', 'y', 'yes']:
+            git_commit_and_push(custom_msg="chore: resume/start automated daily video posting")
+        return
+    elif args.status:
         show_status()
     elif args.apply:
         cfg = load_schedule_config()
